@@ -1,0 +1,190 @@
+<html>
+	<head>
+		<title>Geotagged Photoboard</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+		<script data-require="angular.js@*" data-semver="1.3.0-beta.14" src="http://code.angularjs.org/1.3.0-beta.14/angular.js"></script>
+		<script type="text/javascript" src="assets/js/date.js"></script>
+	</head>
+	<body>
+		<div ng-controller="geotagController" ng-app="geotagApp">
+		<!-- Header -->
+				<div id="header">
+	
+					<div class="top">
+	
+						<!-- Logo -->
+							<div id="logo">
+								<span class="image avatar48"><img src="/geotagged/images/icon.jpg" height="80%" width="80%" alt="" /></span>
+								<h1 id="title">TheRightWayUp</h1>
+								<p>Geotagged Photo Board</p>
+							</div>
+	
+						<!-- Nav -->
+							<nav id="nav">
+								<!--
+	
+									Prologue's nav expects links in one of two formats:
+	
+									1. Hash link (scrolls to a different section within the page)
+	
+									   <li><a href="#foobar" id="foobar-link" class="icon fa-whatever-icon-you-want skel-layers-ignoreHref"><span class="label">Foobar</span></a></li>
+	
+									2. Standard link (sends the user to another page/site)
+	
+									   <li><a href="http://foobar.tld" id="foobar-link" class="icon fa-whatever-icon-you-want"><span class="label">Foobar</span></a></li>
+	
+								-->
+								<ul>
+									<li><a href="#upload" id="upload-link" class="skel-layers-ignoreHref"><span>Upload</span></a></li>
+									<li><a href="#view" id="view-link" class="skel-layers-ignoreHref"><span>View Map</span></a></li>
+									<li><a href="#guide" id="guide-link" class="skel-layers-ignoreHref"><span>Guide</span></a></li>
+									<li><a href="#about" id="about-link" class="skel-layers-ignoreHref"><span>About</span></a></li>
+									<li><a href="/geotagged/event" id="event-link" class="skel-layers-ignoreHref"><span>Events</span></a></li>
+								</ul>
+							</nav>
+	
+					</div>
+	
+					<div class="bottom">
+	
+						<!-- Social Icons -->
+							<ul class="icons">
+								<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+								<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+								<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+								<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
+							</ul>
+	
+					</div>
+	
+				</div>
+	
+			<!-- Main -->
+				<div id="main">
+	
+					<!-- Upload -->
+						<section id="upload" class="one dark cover">
+							<div class="container">
+								<header>
+									<h2 class="alt"><strong>Upload</strong></h2>							
+								</header>
+								<p>Please select an image to upload and add a description</p>
+								<br/>  
+								<form method="POST" enctype="multipart/form-data" action="uploaded">
+									<textarea name="desc" rows="2" cols="50" required="required"></textarea>
+									<br/>
+									<select id="status" name ="status">
+									    <option value="1">Positive review</option>
+									    <option value="2">Negative review</option>
+									</select>
+									<br/>
+									<select id="eventSelection" name ="eventSelection">
+									</select> <br/>
+									<input type="file" name="file" size="100" required="required"></input>
+									<input type="submit" value="Submit"></input>
+								</form>
+							</div>
+						</section>
+	
+					<!-- View Map -->
+						<section id="view" class="two">
+							<div class="container">
+	
+								<header>
+									<h2>Map</h2>
+								</header>
+	
+								<p>Click on a pin to see a submission</p>
+	
+								<div id ="map">
+			  					</div>
+			  					<form>
+			  					
+			  					  Sort settings:
+			  					  <select id="eventSort" name ="eventSort">
+									    <option value="All Events">All Events</option>
+								  </select>
+								  <br/>
+							  	  <input type="date" id="dateInput"></input>
+								  <br/><input type="radio" name="review" checked="checked" value="0"></input> All Reviews
+								  <br/><input type="radio" name="review" value="1"></input> Positive Review
+								  <br/><input type="radio" name="review" value="2"></input> Negative Reviews
+								  <br/><button id="sortButton" type="button">Sort</button>
+								  
+								</form>
+	
+							</div>
+						</section>
+	
+					<!-- Guide -->
+						<section id="guide" class="three">
+							<div class="container">
+	
+								<header>
+									<h2>Guide</h2>
+								</header>
+								
+								<p>To upload an image to the web board you must have location settings<br/>
+								enabled on your device. To do this follow the tutorials below.</p>
+								<p><b>iPhone</b><br/></p>
+								<p>1. Launch the Settings app from your iPhone or iPad Home screen.<br/>
+								   2. Tap on Privacy.<br/>
+								   3. Tap on Location Services.<br/>
+								   4. Tap on Camera.<br/>
+								   5. Choose to enable location access.</p>
+								<p><b>Android</b><br/></p>
+								<p>1. Open the camera app.<br/>
+								   2. Find and click on the "cog"/settings button<br/>
+								   3. Find the geo-tag option or the map marker/pin button<br/>
+								   4. Enable this setting.</p>
+								   
+							</div>
+						</section>
+	
+					<!-- About -->
+						<section id="about" class="four">
+							<div class="container">
+	
+								<header>
+									<h2>About</h2>
+								</header>
+	
+								<p>This Geotagged Web Board is aimed to help outdoor event organisers gain feedback from the public as to any negative inpacts on the enviroment and any positive comments for the events.</p> 
+								<p>Furthermore, this will also be used to reward event organisers  for comply with the Environmental Certificate Scheme.</p>
+	
+							</div>
+						</section>
+	
+				</div>
+	
+			<!-- Footer -->
+				<div id="footer">
+	
+					<!-- Copyright -->
+						<ul class="copyright">
+							<li>&copy; TheRightWayUp.org All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+	
+				</div>
+		</div>
+		
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/jquery.scrollzer.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+		<script src="assets/js/main.js"></script>
+		<script type="text/javascript" src="assets/js/app.js"></script>
+		
+	</body>
+
+</html>
