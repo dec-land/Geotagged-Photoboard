@@ -71,9 +71,4 @@ public class Photo {
 	public String getEvent() {
 		return this.event;
 	}
-
-	public String toString() {
-		return String.format("Photo[id=%d, description='%s', lat='%f', lon='%f']", new Object[] {
-				Long.valueOf(this.photoID), this.description, Double.valueOf(this.lat), Double.valueOf(this.lon) });
-	}
 }
