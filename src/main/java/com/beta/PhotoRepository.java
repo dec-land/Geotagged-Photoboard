@@ -16,6 +16,8 @@ public abstract interface PhotoRepository extends CrudRepository<Photo, Long> {
 	public abstract List<Photo> findAll();
 
 	public abstract List<Photo> findByDate(@Param("date") String paramString);
+	
+	public abstract List<Photo> findByMeta(@Param("meta") int paramInt);
 
 	public abstract List<Photo> findByEvent(@Param("event") String paramString);
 
@@ -31,3 +33,4 @@ public abstract interface PhotoRepository extends CrudRepository<Photo, Long> {
 
 	public abstract List<Photo> findByStatusAndEvent(@Param("status") int paramInt, @Param("event") String paramString);
 }
+
