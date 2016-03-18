@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 //Create a spring boot controller which is automatically detected by spring boot, used for mapping methods to different urls
@@ -88,17 +90,32 @@ public class FileUploadController {
 					String dateString = this.df.format(date);
 					
 					//Save the image into the repository(database).
-					if (desc.length() != 0) {
-						this.repository.save(new Photo(desc, lat, lon, path, dateString, status, event));
-					} else {
-						this.repository.save(new Photo(lat, lon, path, dateString, status, event));
-					}
+					this.repository.save(new Photo(desc, lat, lon, path, dateString, status, event,1));
+					
 					//Open the index page
 					return "index";
 				}
-				log.info("No gps location");
+				
 				//Open the selection page where lat and long can be selected.
+				
+				
+				Date selectDate = new Date();
+
+				String uploadsDir = "/";
+				String realPathtoUploads = this.request.getServletContext().getRealPath(uploadsDir);
+
+				String filePath = realPathtoUploads + "WEB-INF/classes/static/images/photo" + this.repository.count()
+						+ ".jpg";
+				File dest = new File(filePath);
+				file.transferTo(dest);
+
+				String path = "/geotagged/images/photo" + this.repository.count() + ".jpg";
+
+				String dateString = this.df.format(selectDate);
+				
+				this.repository.save(new Photo(desc,0, 0, path, dateString, status, event,0));
 				return "select";
+
 			} catch (Exception e) {
 				log.info(e.toString());
 				// Open the error page.
@@ -115,37 +132,20 @@ public class FileUploadController {
 	 	Pretty much the same as the other method without getting the lat and long from the image.
 	*/
 	@RequestMapping(value = { "/geotagged/select", "/select" }, method = RequestMethod.POST)
-	public String handleSelectUpload(@RequestParam("desc") String desc, @RequestParam("file") MultipartFile file,
-			@RequestParam("lng") double lng, @RequestParam("status") int status, @RequestParam("lat") double lat,
-			@RequestParam("eventSelection") String event) {
+	public String handleSelectUpload(@RequestParam("lng") double lng, @RequestParam("lat") double lat) {
 		
-		if (!file.isEmpty()) {
-			try {
-				Date date = new Date();
+		try {
 
-				String uploadsDir = "/";
-				String realPathtoUploads = this.request.getServletContext().getRealPath(uploadsDir);
-
-				String filePath = realPathtoUploads + "WEB-INF/classes/static/images/photo" + this.repository.count()
-						+ ".jpg";
-				File dest = new File(filePath);
-				file.transferTo(dest);
-
-				String path = "/geotagged/images/photo" + this.repository.count() + ".jpg";
-
-				String dateString = this.df.format(date);
-				if (desc.length() != 0) {
-					this.repository.save(new Photo(desc, lat, lng, path, dateString, status, event));
-				} else {
-					this.repository.save(new Photo(lat, lng, path, dateString, status, event));
-				}
-				return "index";
-			} catch (Exception e) {
-				log.info(e.toString());
-				return "error";
-			}
+			List<Photo> photo = repository.findByMeta(0);
+			photo.get(0).setLat(lat);
+			photo.get(0).setLon(lng);
+			photo.get(0).setMeta(1);
+			this.repository.save(photo);
+			
+			return "index";
+		} catch (Exception e) {
+			log.info(e.toString());
+			return "error";
 		}
-		log.info("no file");
-		return "error";
 	}
 }
